@@ -245,6 +245,8 @@ function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const placeholderSrc =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='480' viewBox='0 0 720 480'%3E%3Crect width='720' height='480' fill='%230a0c10'/%3E%3Ctext x='50%25' y='50%25' fill='%23c9d6e3' font-family='Arial,Helvetica,sans-serif' font-size='24' text-anchor='middle' dominant-baseline='middle'%3EScreenshot unavailable%3C/text%3E%3C/svg%3E";
 
   const showPrev = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -265,7 +267,7 @@ function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
 
   const zoomOut = (event: React.MouseEvent) => {
     event.stopPropagation();
-    setZoom((value) => Math.max(1, value - 0.2));
+    setZoom((value) => Math.max(0.5, value - 0.2));
   };
 
   return (
@@ -276,6 +278,7 @@ function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
             src={srcs[activeIndex]}
             alt={`${title} screenshot ${activeIndex + 1}`}
             style={styles.carouselImage}
+            onError={(event) => { event.currentTarget.src = placeholderSrc; }}
           />
           <div style={styles.carouselLabel}>
             <span>{title}</span>
@@ -308,6 +311,7 @@ function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
                 src={src}
                 alt={`${title} thumbnail ${idx + 1}`}
                 style={styles.thumbnailImage}
+                onError={(event) => { event.currentTarget.src = placeholderSrc; }}
               />
             </button>
           ))}
@@ -316,9 +320,6 @@ function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
       {isOpen && (
         <div style={styles.lightboxOverlay} onClick={() => { setIsOpen(false); setZoom(1); }}>
           <div style={styles.lightboxContent} onClick={(event) => event.stopPropagation()}>
-            <button style={styles.lightboxClose} onClick={() => { setIsOpen(false); setZoom(1); }}>
-              ×
-            </button>
             <button style={styles.lightboxPrev} onClick={showPrev}>
               ←
             </button>
@@ -327,6 +328,9 @@ function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
                 src={srcs[activeIndex]}
                 alt={`${title} screenshot ${activeIndex + 1}`}
                 style={{ ...styles.lightboxImage, transform: `scale(${zoom})` }}
+                onError={(event) => {
+                  event.currentTarget.src = placeholderSrc;
+                }}
               />
             </div>
             <button style={styles.lightboxNext} onClick={showNext}>
@@ -336,6 +340,9 @@ function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
               <button style={styles.lightboxZoomButton} onClick={zoomOut}>-</button>
               <span style={styles.lightboxZoomLabel}>{Math.round(zoom * 100)}%</span>
               <button style={styles.lightboxZoomButton} onClick={zoomIn}>+</button>
+            </div>
+            <div style={styles.lightboxNote}>
+              Press outside the panel to exit
             </div>
           </div>
         </div>
@@ -1051,19 +1058,6 @@ const styles: Record<string, CSSProperties> = {
     fontFamily: mono,
     fontSize: 12,
   },
-  lightboxClose: {
-    position: "absolute",
-    top: 12,
-    right: 12,
-    border: "none",
-    background: "rgba(0, 0, 0, 0.75)",
-    color: "#fff",
-    fontSize: 24,
-    width: 44,
-    height: 44,
-    borderRadius: "50%",
-    cursor: "pointer",
-  },
   lightboxPrev: {
     position: "absolute",
     top: "50%",
@@ -1091,6 +1085,14 @@ const styles: Record<string, CSSProperties> = {
     height: 44,
     borderRadius: "50%",
     cursor: "pointer",
+  },
+  lightboxNote: {
+    fontFamily: "Rajdhani, sans-serif",
+    fontSize: 12,
+    color: "#aab8c8",
+    textAlign: "center",
+    padding: "0.25rem 1rem",
+    opacity: 0.85,
   },
   // CODE PANEL
   codePanel: { background: "#060809", border: "1px solid #1e2a38", overflow: "hidden" },
