@@ -30,6 +30,7 @@ interface Project {
   description: string;
   features: string[];
   hasCode: boolean;
+  imageSrcs?: string[];
   codeFile?: string;
   codeLang?: string;
   codeSnippet?: string;
@@ -54,6 +55,7 @@ const PROJECTS: Project[] = [
       "Ride booking → live tracking screen navigation",
     ],
     hasCode: true,
+    imageSrcs: ["./images/jeepgopic1.png", "./images/jeepgopic2.png"],
     codeFile: "MapScreen.tsx",
     codeLang: "TSX",
     codeSnippet: `// Real-time polyline decoder
@@ -113,6 +115,7 @@ const handleBookRide = async (driverId: string) => {
       "Detailed election modal with candidates & periods",
     ],
     hasCode: true,
+    imageSrcs: ["./images/sydneypollspic1.png", "./images/sydneypollspic2.png"],
     codeFile: "dashboard/page.tsx",
     codeLang: "TSX",
     codeSnippet: `// Fetch elections for the logged-in voter
@@ -165,6 +168,7 @@ const handleVoteNow = (electionId: string) => {
       "Responsive component library in Figma",
     ],
     hasCode: false,
+    imageSrcs: ["./images/wildmarketpic1.png", "./images/wildmarketpic2.png"],
     isDesign: true,
   },
   {
@@ -237,6 +241,109 @@ function highlight(code: string): string {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+function ImageGallery({ srcs, title }: { srcs: string[]; title: string }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [zoom, setZoom] = useState(1);
+
+  const showPrev = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setActiveIndex((index) => (index - 1 + srcs.length) % srcs.length);
+    setZoom(1);
+  };
+
+  const showNext = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setActiveIndex((index) => (index + 1) % srcs.length);
+    setZoom(1);
+  };
+
+  const zoomIn = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setZoom((value) => Math.min(2, value + 0.2));
+  };
+
+  const zoomOut = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setZoom((value) => Math.max(1, value - 0.2));
+  };
+
+  return (
+    <>
+      <div style={styles.carouselWrapper} onClick={() => setIsOpen(true)}>
+        <div style={styles.carouselCard}>
+          <img
+            src={srcs[activeIndex]}
+            alt={`${title} screenshot ${activeIndex + 1}`}
+            style={styles.carouselImage}
+          />
+          <div style={styles.carouselLabel}>
+            <span>{title}</span>
+            <span>{activeIndex + 1}/{srcs.length}</span>
+          </div>
+          <button style={styles.carouselButtonPrev} onClick={showPrev}>
+            ←
+          </button>
+          <button style={styles.carouselButtonNext} onClick={showNext}>
+            →
+          </button>
+        </div>
+        <div style={styles.thumbnailStack}>
+          {srcs.map((src, idx) => (
+            <button
+              key={`${src}-${idx}`}
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                setActiveIndex(idx);
+              }}
+              style={{
+                ...styles.thumbnailCard,
+                ...(activeIndex === idx ? styles.thumbnailCardActive : {}),
+                transform: `translateX(${idx * 6}px) translateY(${idx * 3}px)`,
+                opacity: activeIndex === idx ? 1 : 0.8,
+              }}
+            >
+              <img
+                src={src}
+                alt={`${title} thumbnail ${idx + 1}`}
+                style={styles.thumbnailImage}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+      {isOpen && (
+        <div style={styles.lightboxOverlay} onClick={() => { setIsOpen(false); setZoom(1); }}>
+          <div style={styles.lightboxContent} onClick={(event) => event.stopPropagation()}>
+            <button style={styles.lightboxClose} onClick={() => { setIsOpen(false); setZoom(1); }}>
+              ×
+            </button>
+            <button style={styles.lightboxPrev} onClick={showPrev}>
+              ←
+            </button>
+            <div style={styles.lightboxViewer}>
+              <img
+                src={srcs[activeIndex]}
+                alt={`${title} screenshot ${activeIndex + 1}`}
+                style={{ ...styles.lightboxImage, transform: `scale(${zoom})` }}
+              />
+            </div>
+            <button style={styles.lightboxNext} onClick={showNext}>
+              →
+            </button>
+            <div style={styles.lightboxZoomControls}>
+              <button style={styles.lightboxZoomButton} onClick={zoomOut}>-</button>
+              <span style={styles.lightboxZoomLabel}>{Math.round(zoom * 100)}%</span>
+              <button style={styles.lightboxZoomButton} onClick={zoomIn}>+</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function CodePanel({ file, lang, snippet }: { file: string; lang: string; snippet: string }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
@@ -406,7 +513,7 @@ export default function Portfolio() {
 
       {/* ── HERO ── */}
       <div style={styles.hero}>
-        <div style={styles.heroTag}>// available for OJT / internship</div>
+        <div style={styles.heroTag}>// Looking for OJT</div>
         <h1 style={styles.heroName}>
           {typedName}
           <span style={styles.cursor} />
@@ -419,7 +526,7 @@ export default function Portfolio() {
         </p>
         <div style={styles.heroBtns}>
           <button onClick={() => scrollTo("projects")} style={styles.btnPrimary}>view my work</button>
-          <button onClick={() => scrollTo("contact")} style={styles.btnSec}>get in touch</button>
+          <button onClick={() => scrollTo("contact")} style={styles.btnSec}>contact info</button>
         </div>
         <div style={styles.heroStats}>
           {[["5", "projects"], ["6+", "languages"], ["OJT", "ready"]].map(([num, label]) => (
@@ -511,14 +618,13 @@ export default function Portfolio() {
       <section id="contact" style={styles.section}>
         <SectionHeader num="04." title="contact" />
         <div style={styles.contactBox}>
-          <div style={styles.contactTitle}>// open_to_ojt = true</div>
+          <div style={styles.contactTitle}>// Seeking for OJT</div>
           <div style={styles.contactSub}>Looking for internship opportunities. Let's build something together.</div>
           <div style={styles.contactLinks}>
             {[
               { label: "email me", href: "mailto:harliekhurt009@gmail.com" },
               { label: "LinkedIn", href: "https://www.linkedin.com/in/harlie-khurt-cañas-23aa183a2" },
-              { label: "GitHub", href: "#" },
-              { label: "download CV", href: "#" },
+              { label: "GitHub", href: "https://github.com/major119791" },
             ].map(({ label, href }) => (
               <a key={label} href={href} style={styles.contactLink}>{label}</a>
             ))}
@@ -530,7 +636,7 @@ export default function Portfolio() {
       </section>
 
       <footer style={styles.footer}>
-        built with ♥ &nbsp;—&nbsp;{" "}
+        build with passion &nbsp;—&nbsp;{" "}
         <span style={{ color: "#00ff88" }}>Harlie Khurt T. Cañas</span>
         &nbsp;|&nbsp; BS Computer Engineering &nbsp;|&nbsp; seeking OJT
       </footer>
@@ -579,7 +685,9 @@ function ProjectCard({ project }: { project: Project }) {
           </ul>
         </div>
         <div>
-          {project.hasCode && project.codeSnippet ? (
+          {project.imageSrcs ? (
+            <ImageGallery srcs={project.imageSrcs} title={project.title} />
+          ) : project.hasCode && project.codeSnippet ? (
             <CodePanel
               file={project.codeFile!}
               lang={project.codeLang!}
@@ -587,9 +695,7 @@ function ProjectCard({ project }: { project: Project }) {
             />
           ) : project.isDesign ? (
             <DesignPreview />
-          ) : (
-            <NoCodePreview title={project.title} />
-          )}
+          ) : null}
         </div>
       </div>
     </div>
@@ -764,12 +870,228 @@ const styles: Record<string, CSSProperties> = {
   projBody: {
     padding: "1.5rem",
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
     gap: "1.5rem",
   },
   projDesc: { fontSize: "1rem", color: "#7a94aa", lineHeight: 1.7, marginBottom: "1rem" },
   featureList: { listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 8 },
   featureItem: { fontFamily: mono, fontSize: 11, color: "#7a94aa", display: "flex", alignItems: "flex-start" },
+  carouselWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.25rem",
+    marginTop: "1rem",
+    width: "100%",
+  },
+  carouselCard: {
+    position: "relative",
+    borderRadius: 16,
+    overflow: "hidden",
+    border: "1px solid #1e2a38",
+    cursor: "pointer",
+    minHeight: 260,
+    background: "#0f1117",
+    boxShadow: "0 18px 60px rgba(0,0,0,0.18)",
+    transition: "transform .25s ease, box-shadow .25s ease",
+  },
+  carouselCardHover: {
+    transform: "translateY(-3px)",
+    boxShadow: "0 24px 80px rgba(0,0,0,0.22)",
+  },
+  carouselImage: {
+    width: "100%",
+    height: "auto",
+    display: "block",
+    transition: "transform .3s ease, opacity .35s ease",
+    objectFit: "cover",
+  },
+  carouselLabel: {
+    position: "absolute",
+    left: 16,
+    bottom: 16,
+    right: 16,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    fontFamily: mono,
+    fontSize: 12,
+    color: "#c9d6e3",
+    background: "rgba(10, 12, 16, 0.78)",
+    padding: "0.7rem 1rem",
+    borderRadius: 999,
+    gap: "0.5rem",
+  },
+  carouselButtonPrev: {
+    position: "absolute",
+    left: 12,
+    top: "50%",
+    transform: "translateY(-50%)",
+    border: "none",
+    background: "rgba(0, 0, 0, 0.55)",
+    color: "#00ff88",
+    fontSize: 18,
+    width: 42,
+    height: 42,
+    borderRadius: "50%",
+    cursor: "pointer",
+    transition: "background .2s ease, transform .2s ease",
+  },
+  carouselButtonNext: {
+    position: "absolute",
+    right: 12,
+    top: "50%",
+    transform: "translateY(-50%)",
+    border: "none",
+    background: "rgba(0, 0, 0, 0.55)",
+    color: "#00ff88",
+    fontSize: 18,
+    width: 42,
+    height: 42,
+    borderRadius: "50%",
+    cursor: "pointer",
+    transition: "background .2s ease, transform .2s ease",
+  },
+  thumbnailStack: {
+    display: "flex",
+    gap: "1rem",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    overflowX: "auto",
+    paddingBottom: "0.25rem",
+  },
+  thumbnailCard: {
+    border: "1px solid #1e2a38",
+    borderRadius: 14,
+    overflow: "hidden",
+    width: 120,
+    minWidth: 120,
+    height: 84,
+    padding: 0,
+    background: "#0f1117",
+    cursor: "pointer",
+    transition: "transform .2s ease, box-shadow .2s ease, opacity .2s ease",
+  },
+  thumbnailCardActive: {
+    transform: "scale(1.03)",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.18)",
+  },
+  thumbnailImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  },
+  lightboxOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    background: "rgba(0, 0, 0, 0.9)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2000,
+    padding: "1.5rem",
+  },
+  lightboxContent: {
+    position: "relative",
+    maxWidth: "92vw",
+    maxHeight: "92vh",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "1rem",
+  },
+  lightboxViewer: {
+    position: "relative",
+    width: "100%",
+    maxWidth: "88vw",
+    maxHeight: "78vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    borderRadius: 16,
+    background: "#0a0c10",
+  },
+  lightboxImage: {
+    width: "auto",
+    maxWidth: "100%",
+    maxHeight: "100%",
+    borderRadius: 16,
+    display: "block",
+    transition: "transform .2s ease",
+  },
+  lightboxZoomControls: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+    background: "rgba(10, 12, 16, 0.72)",
+    padding: "0.65rem 1rem",
+    borderRadius: 999,
+    fontFamily: mono,
+    color: "#c9d6e3",
+  },
+  lightboxZoomButton: {
+    border: "none",
+    background: "rgba(0, 0, 0, 0.75)",
+    color: "#00ff88",
+    fontSize: 18,
+    width: 36,
+    height: 36,
+    borderRadius: "50%",
+    cursor: "pointer",
+  },
+  lightboxZoomLabel: {
+    minWidth: 44,
+    textAlign: "center",
+    fontFamily: mono,
+    fontSize: 12,
+  },
+  lightboxClose: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    border: "none",
+    background: "rgba(0, 0, 0, 0.75)",
+    color: "#fff",
+    fontSize: 24,
+    width: 44,
+    height: 44,
+    borderRadius: "50%",
+    cursor: "pointer",
+  },
+  lightboxPrev: {
+    position: "absolute",
+    top: "50%",
+    left: 12,
+    transform: "translateY(-50%)",
+    border: "none",
+    background: "rgba(0, 0, 0, 0.75)",
+    color: "#00ff88",
+    fontSize: 20,
+    width: 44,
+    height: 44,
+    borderRadius: "50%",
+    cursor: "pointer",
+  },
+  lightboxNext: {
+    position: "absolute",
+    top: "50%",
+    right: 12,
+    transform: "translateY(-50%)",
+    border: "none",
+    background: "rgba(0, 0, 0, 0.75)",
+    color: "#00ff88",
+    fontSize: 20,
+    width: 44,
+    height: 44,
+    borderRadius: "50%",
+    cursor: "pointer",
+  },
   // CODE PANEL
   codePanel: { background: "#060809", border: "1px solid #1e2a38", overflow: "hidden" },
   noCodePanel: { background: "#060809", border: "1px solid #1e2a38", overflow: "hidden", minHeight: 220 },
