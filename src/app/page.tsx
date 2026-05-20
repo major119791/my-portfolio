@@ -55,7 +55,7 @@ const PROJECTS: Project[] = [
       "Ride booking → live tracking screen navigation",
     ],
     hasCode: true,
-    imageSrcs: ["/jeepgo-1.png", "/jeepgo-2.png"],
+    imageSrcs: ["/images/jeepgopic1.png", "/images/jeepgopic2.png"],
     codeFile: "MapScreen.tsx",
     codeLang: "TSX",
     codeSnippet: `// Real-time polyline decoder
@@ -115,7 +115,7 @@ const handleBookRide = async (driverId: string) => {
       "Detailed election modal with candidates & periods",
     ],
     hasCode: true,
-    imageSrcs: ["/pollpro-1.png", "/pollpro-2.png"],
+    imageSrcs: ["/images/sydneypollspic1.png", "/images/sydneypollspic2.png"],
     codeFile: "dashboard/page.tsx",
     codeLang: "TSX",
     codeSnippet: `// Fetch elections for the logged-in voter
@@ -168,7 +168,7 @@ const handleVoteNow = (electionId: string) => {
       "Responsive component library in Figma",
     ],
     hasCode: false,
-    imageSrcs: ["/wildmarket-1.png", "/wildmarket-2.png"],
+    imageSrcs: ["/images/wildmarketpic1.png", "/images/wildmarketpic2.png"],
     isDesign: true,
   },
   {
