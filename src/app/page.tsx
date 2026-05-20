@@ -55,7 +55,7 @@ const PROJECTS: Project[] = [
       "Ride booking → live tracking screen navigation",
     ],
     hasCode: true,
-    imageSrcs: ["./images/jeepgopic1.png", "./images/jeepgopic2.png"],
+    imageSrcs: ["/jeepgo-1.png", "/jeepgo-2.png"],
     codeFile: "MapScreen.tsx",
     codeLang: "TSX",
     codeSnippet: `// Real-time polyline decoder
@@ -115,7 +115,7 @@ const handleBookRide = async (driverId: string) => {
       "Detailed election modal with candidates & periods",
     ],
     hasCode: true,
-    imageSrcs: ["./images/sydneypollspic1.png", "./images/sydneypollspic2.png"],
+    imageSrcs: ["/pollpro-1.png", "/pollpro-2.png"],
     codeFile: "dashboard/page.tsx",
     codeLang: "TSX",
     codeSnippet: `// Fetch elections for the logged-in voter
@@ -168,7 +168,7 @@ const handleVoteNow = (electionId: string) => {
       "Responsive component library in Figma",
     ],
     hasCode: false,
-    imageSrcs: ["./images/wildmarketpic1.png", "./images/wildmarketpic2.png"],
+    imageSrcs: ["/wildmarket-1.png", "/wildmarket-2.png"],
     isDesign: true,
   },
   {
@@ -487,7 +487,7 @@ export default function Portfolio() {
       {/* ── NAV ── */}
       <nav style={styles.nav}>
         <div style={styles.navLogo}>
-          <span style={{ color: "#7a94aa" }}>~/</span>portfolio<span style={{ color: "#7a94aa" }}>.dev</span>
+          <span style={{ color: "#7a94aa" }}>~/</span>my_portfolio<span style={{ color: "#7a94aa" }}>.dev</span>
         </div>
         <div style={styles.navLinks}>
           {[
@@ -540,10 +540,10 @@ export default function Portfolio() {
 
       {/* ── ABOUT ── */}
       <section id="about" style={styles.section}>
-        <SectionHeader num="01." title="about me" />
+        <SectionHeader num="01." title="About me" />
         <div style={styles.aboutGrid}>
           <div style={styles.terminalBox}>
-            <div style={styles.termTitle}>// whoami</div>
+            <div style={styles.termTitle}>// who am I</div>
             {[
               ["role", "CompE Student"],
               ["school", "CIT-U"],
@@ -589,7 +589,7 @@ export default function Portfolio() {
 
       {/* ── PROJECTS ── */}
       <section id="projects" style={styles.section}>
-        <SectionHeader num="02." title="featured projects" />
+        <SectionHeader num="02." title="Featured Projects" />
         <div style={{ display: "flex", flexDirection: "column", gap: 1, background: "#1e2a38" }}>
           {PROJECTS.map((proj) => (
             <ProjectCard key={proj.id} project={proj} />
@@ -599,7 +599,7 @@ export default function Portfolio() {
 
       {/* ── SKILLS ── */}
       <section id="skills" style={styles.section}>
-        <SectionHeader num="03." title="skills & tools" />
+        <SectionHeader num="03." title="Skills & Tools" />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 1, background: "#1e2a38" }}>
           {SKILLS.map((cat) => (
             <div key={cat.category} style={styles.skillCat}>
@@ -616,13 +616,13 @@ export default function Portfolio() {
 
       {/* ── CONTACT ── */}
       <section id="contact" style={styles.section}>
-        <SectionHeader num="04." title="contact" />
+        <SectionHeader num="04." title="Contact" />
         <div style={styles.contactBox}>
           <div style={styles.contactTitle}>// Seeking for OJT</div>
           <div style={styles.contactSub}>Looking for internship opportunities. Let's build something together.</div>
           <div style={styles.contactLinks}>
             {[
-              { label: "email me", href: "mailto:harliekhurt009@gmail.com" },
+              { label: "Email me", href: "mailto:harliekhurt009@gmail.com" },
               { label: "LinkedIn", href: "https://www.linkedin.com/in/harlie-khurt-cañas-23aa183a2" },
               { label: "GitHub", href: "https://github.com/major119791" },
             ].map(({ label, href }) => (
