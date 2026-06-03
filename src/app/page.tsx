@@ -525,7 +525,7 @@ export default function Portfolio() {
           {typedName}
           <span style={styles.cursor} />
         </h1>
-        <div style={styles.heroTitle}>Computer Engineer — Full Stack &amp; Mobile Dev</div>
+        <div style={styles.heroTitle}>3rd Year Computer Engineer Student</div>
         <p style={styles.heroDesc}>
           BS Computer Engineering student at Cebu Institute of Technology. I build real-time mobile apps,
           data-driven web platforms, and user-centered interfaces. Currently seeking OJT opportunities to
@@ -645,7 +645,7 @@ export default function Portfolio() {
       <footer style={styles.footer}>
         build with passion &nbsp;—&nbsp;{" "}
         <span style={{ color: "#00ff88" }}>Harlie Khurt T. Cañas</span>
-        &nbsp;|&nbsp; BS Computer Engineering &nbsp;|&nbsp; seeking OJT
+        &nbsp;|&nbsp; BS Computer Engineering &nbsp;
       </footer>
     </div>
   );
